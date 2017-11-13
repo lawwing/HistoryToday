@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.lawwing.historytoday.gen.HistoryInfoDb;
@@ -15,6 +19,13 @@ import cn.lawwing.historytoday.network.entity.HistoryResultModel;
 
 public class MainActivity extends AppCompatActivity
 {
+    private TextView showAll;
+    
+    private EditText monthEdittext;
+    
+    private EditText dayEdittext;
+    
+    private Button searchBtn;
     
     private ArrayList<String> dayStrings;
     
@@ -29,6 +40,10 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showAll = (TextView) findViewById(R.id.showAll);
+        monthEdittext = (EditText) findViewById(R.id.monthEdittext);
+        dayEdittext = (EditText) findViewById(R.id.dayEdittext);
+        searchBtn = (Button) findViewById(R.id.searchBtn);
         historyBeens = new ArrayList<>();
         
         mHistoryInfoDbDao = HistoryApp.get()
@@ -49,6 +64,14 @@ public class MainActivity extends AppCompatActivity
                     mHistoryInfoDbDao.loadAll().size() + "条数据",
                     Toast.LENGTH_LONG).show();
         }
+        searchBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                
+            }
+        });
     }
     
     private void getHistoryAPI(String day)
