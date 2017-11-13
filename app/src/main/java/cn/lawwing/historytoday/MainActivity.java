@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import cn.lawwing.historytoday.gen.HistoryInfoDb;
+import cn.lawwing.historytoday.gen.HistoryInfoDbDao;
 import cn.lawwing.historytoday.model.HistoryBean;
 import cn.lawwing.historytoday.network.APIMaster;
 import cn.lawwing.historytoday.network.ApiCallback;
@@ -18,16 +20,34 @@ public class MainActivity extends AppCompatActivity
     
     private ArrayList<HistoryBean> historyBeens;
     
+    private int count = 0;
+    
+    private HistoryInfoDbDao mHistoryInfoDbDao;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         historyBeens = new ArrayList<>();
-        initDayData();
-        for (int a = 0; a < dayStrings.size(); a++)
+        
+        mHistoryInfoDbDao = HistoryApp.get()
+                .getDaoSession()
+                .getHistoryInfoDbDao();
+        
+        if (mHistoryInfoDbDao.loadAll().size() == 0)
         {
-            getHistoryAPI(dayStrings.get(a));
+            initDayData();
+            for (int a = 0; a < dayStrings.size(); a++)
+            {
+                getHistoryAPI(dayStrings.get(a));
+            }
+        }
+        else
+        {
+            Toast.makeText(MainActivity.this,
+                    mHistoryInfoDbDao.loadAll().size() + "条数据",
+                    Toast.LENGTH_LONG).show();
         }
     }
     
@@ -40,6 +60,13 @@ public class MainActivity extends AppCompatActivity
             public void onSuccess(HistoryResultModel response)
             {
                 historyBeens.addAll(response.getResult());
+                count++;
+                if (count == 366)
+                {
+                    Toast.makeText(MainActivity.this, "加载完毕", Toast.LENGTH_LONG)
+                            .show();
+                    saveToDb();
+                }
             }
             
             @Override
@@ -48,9 +75,32 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this,
                         t.getMessage(),
                         Toast.LENGTH_LONG).show();
-                
+                count++;
+                if (count == 366)
+                {
+                    Toast.makeText(MainActivity.this, "加载完毕", Toast.LENGTH_LONG)
+                            .show();
+                    saveToDb();
+                }
             }
         }, "123456", day);
+    }
+    
+    private void saveToDb()
+    {
+        ArrayList<HistoryInfoDb> allhistory = new ArrayList<>();
+        for (HistoryBean bean : historyBeens)
+        {
+            HistoryInfoDb history = new HistoryInfoDb();
+            history.setTitle(bean.getTitle());
+            history.setDate(bean.getDate());
+            history.setDay(bean.getDay());
+            history.setEvent(bean.getEvent());
+            history.setMonth(bean.getMonth());
+            history.setHistoryid(bean.getId());
+            allhistory.add(history);
+        }
+        mHistoryInfoDbDao.insertOrReplaceInTx(allhistory);
     }
     
     private void initDayData()
