@@ -1,4 +1,4 @@
-package cn.lawwing.historytoday;
+package cn.lawwing.historytoday.model;
 
 /**
  * Created by lawwing on 2017/11/13.
@@ -64,5 +64,17 @@ public class HistoryBean {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "HistoryBean{" +
+                "id='" + id + '\'' +
+                ", date='" + date + '\'' +
+                ", month=" + month +
+                ", day=" + day +
+                ", event='" + event + '\'' +
+                ", title='" + title + '\'' +
+                '}' + "\n";
     }
 }
