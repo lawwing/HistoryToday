@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.lawwing.historytoday.adapter.HistoryInfoAdapter;
 import cn.lawwing.historytoday.gen.HistoryInfoDb;
 import cn.lawwing.historytoday.gen.HistoryInfoDbDao;
 import cn.lawwing.historytoday.model.HistoryBean;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     
     private Button searchBtn;
     
+    private RecyclerView recyclerView;
+    
     private ArrayList<String> dayStrings;
     
     private ArrayList<HistoryBean> historyBeens;
@@ -34,6 +39,10 @@ public class MainActivity extends AppCompatActivity
     private int count = 0;
     
     private HistoryInfoDbDao mHistoryInfoDbDao;
+    
+    private HistoryInfoAdapter adapter;
+    
+    private ArrayList<HistoryInfoDb> datas;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,8 +53,11 @@ public class MainActivity extends AppCompatActivity
         monthEdittext = (EditText) findViewById(R.id.monthEdittext);
         dayEdittext = (EditText) findViewById(R.id.dayEdittext);
         searchBtn = (Button) findViewById(R.id.searchBtn);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         historyBeens = new ArrayList<>();
+        datas = new ArrayList<>();
         
+        initRecycler();
         mHistoryInfoDbDao = HistoryApp.get()
                 .getDaoSession()
                 .getHistoryInfoDbDao();
@@ -60,18 +72,43 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            Toast.makeText(MainActivity.this,
-                    mHistoryInfoDbDao.loadAll().size() + "条数据",
-                    Toast.LENGTH_LONG).show();
+            showAll.setText("数据正在加载中....");
         }
+        
         searchBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
+                datas.clear();
                 
+                datas.addAll(mHistoryInfoDbDao.queryBuilder()
+                        .where(HistoryInfoDbDao.Properties.Month
+                                .eq(monthEdittext.getText().toString()),
+                                HistoryInfoDbDao.Properties.Day
+                                        .eq(dayEdittext.getText().toString()))
+                        .list());
+                if (datas.size() > 0)
+                {
+                    adapter.notifyDataSetChanged();
+                    showAll.setVisibility(View.GONE);
+                }
+                else
+                {
+                    showAll.setText("没有查到数据");
+                    showAll.setVisibility(View.VISIBLE);
+                }
             }
         });
+    }
+    
+    private void initRecycler()
+    {
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+        adapter = new HistoryInfoAdapter(MainActivity.this, datas);
+        recyclerView.setAdapter(adapter);
     }
     
     private void getHistoryAPI(String day)
@@ -86,8 +123,7 @@ public class MainActivity extends AppCompatActivity
                 count++;
                 if (count == 366)
                 {
-                    Toast.makeText(MainActivity.this, "加载完毕", Toast.LENGTH_LONG)
-                            .show();
+                    showAll.setText("数据加载完毕");
                     saveToDb();
                 }
             }
@@ -101,8 +137,7 @@ public class MainActivity extends AppCompatActivity
                 count++;
                 if (count == 366)
                 {
-                    Toast.makeText(MainActivity.this, "加载完毕", Toast.LENGTH_LONG)
-                            .show();
+                    showAll.setText("数据加载完毕");
                     saveToDb();
                 }
             }
