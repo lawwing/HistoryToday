@@ -47,9 +47,24 @@ public class HistoryInfoAdapter
         final HistoryInfoDb model = datas.get(position);
         if (model != null)
         {
-            holder.dateText.setText(model.getDate().substring(0, 4) + "年"
-                    + model.getDate().substring(4, 6) + "月"
-                    + model.getDate().substring(6, 8) + "日");
+            try
+            {
+                String dataString = model.getDate();
+                holder.dateText.setText(
+                        dataString.substring(0, dataString.length() - 4) + "年"
+                                + dataString.substring(dataString.length() - 4,
+                                        dataString.length() - 2)
+                                + "月"
+                                + dataString.substring(dataString.length() - 2,
+                                        dataString.length())
+                                + "日");
+                
+            }
+            catch (Exception e)
+            {
+                holder.dateText.setText(model.getDate());
+                
+            }
             holder.titleText.setText(model.getTitle());
             holder.contentText.setText(model.getEvent());
             holder.bossLayout.setOnClickListener(new View.OnClickListener()

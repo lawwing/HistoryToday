@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.lawwing.historytoday.gen.HistoryInfoDb;
@@ -47,9 +46,24 @@ public class HistoryTodayInfoActivity extends AppCompatActivity
         model = mHistoryInfoDbDao.load(id);
         if (model != null)
         {
-            dateText.setText(model.getDate().substring(0, 4) + "年"
-                    + model.getDate().substring(4, 6) + "月"
-                    + model.getDate().substring(6, 8) + "日");
+            try
+            {
+                String dataString = model.getDate();
+                dateText.setText(
+                        dataString.substring(0, dataString.length() - 4) + "年"
+                                + dataString.substring(dataString.length() - 4,
+                                        dataString.length() - 2)
+                                + "月"
+                                + dataString.substring(dataString.length() - 2,
+                                        dataString.length())
+                                + "日");
+                
+            }
+            catch (Exception e)
+            {
+                dateText.setText(model.getDate());
+                
+            }
             titleText.setText(model.getTitle());
             contentText.setText(model.getEvent());
         }
