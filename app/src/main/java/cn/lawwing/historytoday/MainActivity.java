@@ -1,6 +1,5 @@
 package cn.lawwing.historytoday;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.os.Bundle;
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity
                 String string = gson.toJson(mHistoryInfoDbDao.loadAll());
                 FileUtils.writeTxtFile(string,
                         FileManager.getSaveFolder().getAbsolutePath()
-                                + "/test.txt");
+                                + "/history.json");
             }
         });
     }
