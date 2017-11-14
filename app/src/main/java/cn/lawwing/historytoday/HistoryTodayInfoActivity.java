@@ -47,7 +47,9 @@ public class HistoryTodayInfoActivity extends AppCompatActivity
         model = mHistoryInfoDbDao.load(id);
         if (model != null)
         {
-            dateText.setText(model.getDate());
+            dateText.setText(model.getDate().substring(0, 4) + "年"
+                    + model.getDate().substring(4, 6) + "月"
+                    + model.getDate().substring(6, 8) + "日");
             titleText.setText(model.getTitle());
             contentText.setText(model.getEvent());
         }

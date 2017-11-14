@@ -3,26 +3,35 @@
     android:id="@+id/bossLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2" />
+        android:maxLines="2"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="#9a9a9a"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/contentText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:ellipsize="end"
-        android:maxLines="2" />
+        android:maxLines="3"
+        android:textColor="#333333"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"

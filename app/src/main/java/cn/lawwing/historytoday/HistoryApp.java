@@ -1,5 +1,7 @@
 package cn.lawwing.historytoday;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -27,6 +29,8 @@ public class HistoryApp extends Application
         
         _instance = (HistoryApp) getApplicationContext();
         
+        CrashReport
+                .initCrashReport(getApplicationContext(), "7f85e93995", false);
         setDatabase();
         
     }

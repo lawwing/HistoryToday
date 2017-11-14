@@ -47,7 +47,9 @@ public class HistoryInfoAdapter
         final HistoryInfoDb model = datas.get(position);
         if (model != null)
         {
-            holder.dateText.setText(model.getDate());
+            holder.dateText.setText(model.getDate().substring(0, 4) + "年"
+                    + model.getDate().substring(4, 6) + "月"
+                    + model.getDate().substring(6, 8) + "日");
             holder.titleText.setText(model.getTitle());
             holder.contentText.setText(model.getEvent());
             holder.bossLayout.setOnClickListener(new View.OnClickListener()
