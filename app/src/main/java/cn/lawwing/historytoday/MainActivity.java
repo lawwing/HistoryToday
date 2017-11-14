@@ -1,5 +1,6 @@
 package cn.lawwing.historytoday;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import cn.lawwing.historytoday.adapter.HistoryInfoAdapter;
 import cn.lawwing.historytoday.gen.HistoryInfoDb;
 import cn.lawwing.historytoday.gen.HistoryInfoDbDao;
@@ -19,6 +22,8 @@ import cn.lawwing.historytoday.model.HistoryBean;
 import cn.lawwing.historytoday.network.APIMaster;
 import cn.lawwing.historytoday.network.ApiCallback;
 import cn.lawwing.historytoday.network.entity.HistoryResultModel;
+import cn.lawwing.historytoday.utils.FileManager;
+import cn.lawwing.historytoday.utils.FileUtils;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -29,6 +34,8 @@ public class MainActivity extends AppCompatActivity
     private EditText dayEdittext;
     
     private Button searchBtn;
+    
+    private Button outputBtn;
     
     private RecyclerView recyclerView;
     
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity
         monthEdittext = (EditText) findViewById(R.id.monthEdittext);
         dayEdittext = (EditText) findViewById(R.id.dayEdittext);
         searchBtn = (Button) findViewById(R.id.searchBtn);
+        outputBtn = (Button) findViewById(R.id.outputBtn);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         historyBeens = new ArrayList<>();
         datas = new ArrayList<>();
@@ -98,6 +106,18 @@ public class MainActivity extends AppCompatActivity
                     showAll.setText("没有查到数据");
                     showAll.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+        outputBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Gson gson = new Gson();
+                String string = gson.toJson(mHistoryInfoDbDao.loadAll());
+                FileUtils.writeTxtFile(string,
+                        FileManager.getSaveFolder().getAbsolutePath()
+                                + "/test.txt");
             }
         });
     }
@@ -159,6 +179,7 @@ public class MainActivity extends AppCompatActivity
             allhistory.add(history);
         }
         mHistoryInfoDbDao.insertOrReplaceInTx(allhistory);
+        
     }
     
     private void initDayData()

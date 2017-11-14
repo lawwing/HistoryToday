@@ -32,6 +32,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="搜索" />
+
+        <Button
+            android:id="@+id/outputBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="导出" />
     </LinearLayout>
 
     <RelativeLayout
@@ -42,7 +49,8 @@
             android:id="@+id/showAll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="数据加载中" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
